@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import BookCard from '../components/BookCard';
+import { useFavorites } from '../hooks/useFavorites';
 import {
   View,
   TextInput,
@@ -13,6 +15,7 @@ import { Book } from '../types/books';
 export default function SearchScreen() {
   const [query, setQuery] = useState('');
   const [books, setBooks] = useState<Book[]>([]);
+  const { toggleFavorite, isFavorite } = useFavorites();
 
   const handleSearch = async () => {
     if (!query) return;
@@ -39,23 +42,12 @@ export default function SearchScreen() {
         data={books}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
-          <TouchableOpacity style={{ marginBottom: 16 }}>
-            <View style={{ flexDirection: 'row' }}>
-              {item.thumbnail && (
-                <Image
-                  source={{ uri: item.thumbnail }}
-                  style={{ width: 60, height: 90, marginRight: 12 }}
-                />
-              )}
-
-              <View style={{ flex: 1 }}>
-                <Text style={{ fontWeight: 'bold' }}>{item.title}</Text>
-                <Text>{item.authors.join(', ')}</Text>
-                <Text>{item.publishedDate}</Text>
-              </View>
-            </View>
-          </TouchableOpacity>
-        )}
+  <BookCard
+    book={item}
+    isFavorite={isFavorite(item.id)}
+    onToggleFavorite={() => toggleFavorite(item)}
+  />
+)}
       />
     </View>
   );
