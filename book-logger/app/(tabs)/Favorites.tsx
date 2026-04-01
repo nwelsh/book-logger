@@ -31,24 +31,31 @@ export default function FavoritesScreen() {
     //   />
     // </View>
 
-     <View style={styles.main}>
-      {favorites.map((book) => (
-        <BookCard
-          key={book.id}
-          book={book}
-          isFavorite={isFavorite(book.id)}
-          onToggleFavorite={() => toggleFavorite(book)}
-        />
-      ))}
+    <View style={styles.main}>
+      <Text style={{ fontSize: 24, marginBottom: 16 }}>FAVS!</Text>
+      <View style={styles.favsContainer}>
+        {favorites.map((book) => (
+          <BookCard
+            key={book.id}
+            book={book}
+            isFavorite={isFavorite(book.id)}
+            onToggleFavorite={() => toggleFavorite(book)}
+          />
+        ))}
+      </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   main: {
-    // flex: 1,  
+    // flex: 1,
     padding: 16,
+    flexDirection: "column",
+    gap: 16,
+  },
+  favsContainer: {
     flexDirection: "row",
-    gap: 16
+    gap: 16,
   },
 });
