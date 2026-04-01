@@ -1,6 +1,5 @@
-import React, { useState } from 'react';
-import BookCard from '../components/BookCard';
-import { useFavorites } from '../hooks/useFavorites';
+import React, { useState } from "react";
+import BookCard from "../../src/components/BookCard";
 import {
   View,
   TextInput,
@@ -8,13 +7,16 @@ import {
   Text,
   Image,
   TouchableOpacity,
-} from 'react-native';
-import { searchBooks } from '../api/googleBooks';
-import { Book } from '../types/books';
+} from "react-native";
+import { searchBooks } from "../../src/api/googleBooks";
+import { Book } from "../../src/types/books";
+import { useLibrary } from "../../src/context/LibraryContext";
+import { useFavorites } from "../../src/context/FavoritesContext";
 
 export default function SearchScreen() {
-  const [query, setQuery] = useState('');
+  const [query, setQuery] = useState("");
   const [books, setBooks] = useState<Book[]>([]);
+  const { addOrUpdateBook } = useLibrary();
   const { toggleFavorite, isFavorite } = useFavorites();
 
   const handleSearch = async () => {
@@ -42,12 +44,12 @@ export default function SearchScreen() {
         data={books}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
-  <BookCard
-    book={item}
-    isFavorite={isFavorite(item.id)}
-    onToggleFavorite={() => toggleFavorite(item)}
-  />
-)}
+          <BookCard
+            book={item}
+            isFavorite={isFavorite(item.id)}
+            onToggleFavorite={() => toggleFavorite(item)}
+          />
+        )}
       />
     </View>
   );

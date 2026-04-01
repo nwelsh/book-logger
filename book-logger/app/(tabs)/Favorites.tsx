@@ -1,6 +1,7 @@
-import { View, Text, FlatList } from 'react-native';
-import { useFavorites } from '../../src/context/FavoritesContext';
-import BookCard from '../../src/components/BookCard';
+import { View, Text, FlatList } from "react-native";
+import { useFavorites } from "../../src/context/FavoritesContext";
+import BookCard from "../../src/components/BookCard";
+import { StyleSheet } from "react-native";
 
 export default function FavoritesScreen() {
   const { favorites, toggleFavorite, isFavorite } = useFavorites();
@@ -14,17 +15,40 @@ export default function FavoritesScreen() {
   }
 
   return (
-    <FlatList
-      contentContainerStyle={{ padding: 16 }}
-      data={favorites}
-      keyExtractor={(item) => item.id}
-      renderItem={({ item }) => (
+    // <View style={styles.main}>
+    //   <FlatList
+    //     contentContainerStyle={{ padding: 16 }}
+    //     data={favorites}
+    //     keyExtractor={(item) => item.id}
+    //     style={styles.booksContainer}
+    //     renderItem={({ item }) => (
+    //       <BookCard
+    //         book={item}
+    //         isFavorite={isFavorite(item.id)}
+    //         onToggleFavorite={() => toggleFavorite(item)}
+    //       />
+    //     )}
+    //   />
+    // </View>
+
+     <View style={styles.main}>
+      {favorites.map((book) => (
         <BookCard
-          book={item}
-          isFavorite={isFavorite(item.id)}
-          onToggleFavorite={() => toggleFavorite(item)}
+          key={book.id}
+          book={book}
+          isFavorite={isFavorite(book.id)}
+          onToggleFavorite={() => toggleFavorite(book)}
         />
-      )}
-    />
+      ))}
+    </View>
   );
 }
+
+const styles = StyleSheet.create({
+  main: {
+    // flex: 1,  
+    padding: 16,
+    flexDirection: "row",
+    gap: 16
+  },
+});

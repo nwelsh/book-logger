@@ -1,7 +1,7 @@
-import 'react-native-gesture-handler';
-import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import SearchScreen from './src/screens/SearchScreen';
+import "react-native-gesture-handler";
+import { NavigationContainer } from "@react-navigation/native";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import SearchScreen from "./app/(tabs)/SearchScreen";
 
 const Stack = createNativeStackNavigator();
 

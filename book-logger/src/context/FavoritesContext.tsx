@@ -1,6 +1,6 @@
-import React, { createContext, useContext, useEffect, useState } from 'react';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Book } from '../types/books';
+import React, { createContext, useContext, useEffect, useState } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { Book } from "../types/books";
 
 type FavoritesContextType = {
   favorites: Book[];
@@ -10,7 +10,7 @@ type FavoritesContextType = {
 
 const FavoritesContext = createContext<FavoritesContextType | null>(null);
 
-const STORAGE_KEY = 'FAVORITE_BOOKS';
+const STORAGE_KEY = "FAVORITE_BOOKS";
 
 export function FavoritesProvider({ children }: { children: React.ReactNode }) {
   const [favorites, setFavorites] = useState<Book[]>([]);
@@ -57,7 +57,7 @@ export function FavoritesProvider({ children }: { children: React.ReactNode }) {
 export function useFavorites() {
   const context = useContext(FavoritesContext);
   if (!context) {
-    throw new Error('useFavorites must be used within FavoritesProvider');
+    throw new Error("useFavorites must be used within FavoritesProvider");
   }
   return context;
 }
