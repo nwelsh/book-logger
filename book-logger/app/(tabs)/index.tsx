@@ -1,6 +1,8 @@
 import { View, Text, FlatList } from "react-native";
 import { useLibrary } from "../../src/context/LibraryContext";
 import BookCard from "../../src/components/BookCard";
+import { useState } from "react";
+import { Book } from "../../src/types/books";
 
 export default function HomeScreen() {
   const { rateBook } = useLibrary();

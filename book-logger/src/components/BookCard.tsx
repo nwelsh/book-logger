@@ -9,35 +9,77 @@ type Props = {
   book: Book;
   isFavorite?: boolean;
   onToggleFavorite?: () => void;
+  onPress?: () => void; // ✅ add this
 };
-// TODO click to open up the book as a modal
+/*
+ "#EDC55C",
+    '#EDB35C',
+    '#EDB35C',
+    '#EFA2EB',
+    '#E2D8F2',
+    '#F0A9A3',
+    '#F0BDED',
+    '#9DF0D1',
+    '#90D4F0',
+    '#90B6F0',
+    '#D0F0EF',
+    '#CDF090',
+    '#F2ECC4',
+    '#E4F0D0'
+  ];
+*/
 
 export default function BookCard({
   book,
   isFavorite,
   onToggleFavorite,
+  onPress,
 }: Props) {
   const { addOrUpdateBook } = useLibrary();
   return (
-    <View style={styles.card}>
-      <TouchableOpacity onPress={onToggleFavorite}>
-        <Text style={{ fontSize: 20 }}>{isFavorite ? "❤️" : "🤍"}</Text>
-      </TouchableOpacity>
+    <TouchableOpacity
+      onPress={() => {
+        console.log("pressed");
+        onPress?.();
+      }}
+      activeOpacity={0.8}
+      style={styles.card} // ✅ move style here
+    >
+      {onToggleFavorite && (
+        <TouchableOpacity
+          onPress={(e) => {
+            e.stopPropagation();
+            onToggleFavorite();
+          }}
+        >
+          <Text style={{ fontSize: 20 }}>{isFavorite ? "❤️" : "🤍"}</Text>
+        </TouchableOpacity>
+      )}
+
       {book.thumbnail ? (
         <Image source={{ uri: book.thumbnail }} style={styles.image} />
       ) : (
         <View style={styles.placeholder} />
       )}
+    </TouchableOpacity>
+  );
 
-      {/* <View style={styles.content}> */}
-      {/* <View style={styles.headerRow}>
+  {
+    /* <View style={styles.content}> */
+  }
+  {
+    /* <View style={styles.headerRow}>
           <Text style={styles.title} numberOfLines={2}>
             {book.title}
-          </Text> */}
+          </Text> */
+  }
 
-      {/* </View> */}
+  {
+    /* </View> */
+  }
 
-      {/* <Text style={styles.author} numberOfLines={1}>
+  {
+    /* <Text style={styles.author} numberOfLines={1}>
           {book.authors?.join(", ") || "Unknown author"}
         </Text>
 
@@ -45,10 +87,14 @@ export default function BookCard({
           <Text style={styles.description}>
             {book.description}
           </Text>
-        )} */}
-      {/* </View> */}
-    </View>
-  );
+        )} */
+  }
+  {
+    /* </View> */
+  }
+  //   </View>
+  // </TouchableOpacity>
+  //   );
 }
 const styles = StyleSheet.create({
   card: {
@@ -58,7 +104,7 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     padding: 12,
     display: "flex",
-    alignItems: "flex-end",
+    // alignItems: "flex-end",
     gap: 12,
     // flex: 1,
 
@@ -103,6 +149,6 @@ const styles = StyleSheet.create({
   headerRow: {
     flexDirection: "row",
     justifyContent: "space-between",
-    alignItems: "flex-start",
+    // alignItems: "flex-start",
   },
 });
