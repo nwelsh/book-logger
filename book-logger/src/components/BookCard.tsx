@@ -4,6 +4,7 @@ import { Book } from "../types/books";
 import { TouchableOpacity } from "react-native";
 import { useFavorites } from "../hooks/useFavorites";
 import { useLibrary } from "../context/LibraryContext";
+import { getColorFromId } from "../hooks/useColor";
 
 type Props = {
   book: Book;
@@ -11,23 +12,6 @@ type Props = {
   onToggleFavorite?: () => void;
   onPress?: () => void; // ✅ add this
 };
-/*
- "#EDC55C",
-    '#EDB35C',
-    '#EDB35C',
-    '#EFA2EB',
-    '#E2D8F2',
-    '#F0A9A3',
-    '#F0BDED',
-    '#9DF0D1',
-    '#90D4F0',
-    '#90B6F0',
-    '#D0F0EF',
-    '#CDF090',
-    '#F2ECC4',
-    '#E4F0D0'
-  ];
-*/
 
 export default function BookCard({
   book,
@@ -43,7 +27,7 @@ export default function BookCard({
         onPress?.();
       }}
       activeOpacity={0.8}
-      style={styles.card} // ✅ move style here
+      style={[styles.card, { backgroundColor: getColorFromId(book.id) }]}
     >
       {onToggleFavorite && (
         <TouchableOpacity
