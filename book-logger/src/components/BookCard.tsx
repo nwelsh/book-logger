@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, Image, StyleSheet } from "react-native";
+import { View, Text, Image, StyleSheet, Button } from "react-native";
 import { Book } from "../types/books";
 import { TouchableOpacity } from "react-native";
 import { useFavorites } from "../hooks/useFavorites";
@@ -19,7 +19,14 @@ export default function BookCard({
   onToggleFavorite,
   onPress,
 }: Props) {
-  const { addOrUpdateBook } = useLibrary();
+  const { addOrUpdateBook, setBookStatus, markAsCompleted, rateBook, books } =
+    useLibrary();
+
+  const libraryBook = books.find((b) => b.book.id === book.id);
+
+  const status = libraryBook?.status;
+  const rating = libraryBook?.rating;
+
   return (
     <TouchableOpacity
       onPress={() => {
@@ -45,6 +52,29 @@ export default function BookCard({
       ) : (
         <View style={styles.placeholder} />
       )}
+
+      <Button
+        title="📖 Currently Reading"
+        onPress={() => setBookStatus(book, "reading")}
+      />
+      {status === "reading" && (
+        <TouchableOpacity onPress={() => markAsCompleted(book.id)}>
+          <Text>✅ Done</Text>
+        </TouchableOpacity>
+      )}
+      {status === "completed" && !rating && (
+        <View style={{ flexDirection: "row", gap: 8 }}>
+          {[1, 2, 3, 4, 5].map((star) => (
+            <TouchableOpacity
+              key={star}
+              onPress={() => rateBook(book.id, star)}
+            >
+              <Text style={{ fontSize: 20 }}>⭐</Text>
+            </TouchableOpacity>
+          ))}
+        </View>
+      )}
+      {rating && <Text>{"⭐".repeat(rating)}</Text>}
     </TouchableOpacity>
   );
 

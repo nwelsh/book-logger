@@ -2,7 +2,13 @@ import React, { createContext, useContext, useEffect, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Book } from "../types/books";
 
-type BookStatus = "want_to_read" | "reading" | "read";
+type BookStatus = "want_to_read" | "reading" | "read" | "completed";
+
+type LibraryBook = {
+  book: Book;
+  status?: "reading" | "completed";
+  rating?: number;
+};
 
 type UserBook = {
   id: string;
@@ -18,6 +24,8 @@ type LibraryContextType = {
   updateStatus: (id: string, status: BookStatus) => void;
   rateBook: (id: string, rating: number) => void;
   getBook: (id: string) => UserBook | undefined;
+  setBookStatus: (book: Book, status: BookStatus) => void;
+  markAsCompleted: (bookId: string) => void;
 };
 
 const LibraryContext = createContext<LibraryContextType | null>(null);
@@ -64,18 +72,52 @@ export function LibraryProvider({ children }: { children: React.ReactNode }) {
     save(updated);
   };
 
-  const rateBook = (id: string, rating: number) => {
-    const updated = books.map((b) => (b.id === id ? { ...b, rating } : b));
-    save(updated);
+  const markAsCompleted = (bookId: string) => {
+    setBooks((prev) =>
+      prev.map((b) =>
+        b.book.id === bookId ? { ...b, status: "completed" } : b,
+      ),
+    );
+  };
+
+  const rateBook = (bookId: string, rating: number) => {
+    setBooks((prev) =>
+      prev.map((b) =>
+        b.book.id === bookId ? { ...b, rating, status: "completed" } : b,
+      ),
+    );
   };
 
   const getBook = (id: string) => {
     return books.find((b) => b.id === id);
   };
 
+  const setBookStatus = (
+    book: Book,
+    status: "reading" | "completed" | "wantToRead",
+  ) => {
+    setBooks((prev) => {
+      const existing = prev.find((b) => b.book.id === book.id);
+
+      if (existing) {
+        return prev.map((b) => (b.book.id === book.id ? { ...b, status } : b));
+      }
+
+      return [...prev, { book, status }];
+    });
+  };
+
   return (
     <LibraryContext.Provider
-      value={{ books, addOrUpdateBook, updateStatus, rateBook, getBook }}
+      value={{
+        books,
+        addOrUpdateBook,
+        updateStatus,
+        rateBook,
+        getBook,
+        setBookStatus,
+        markAsCompleted,
+      }}
     >
       {children}
     </LibraryContext.Provider>
