@@ -23,6 +23,7 @@ export function useFavorites() {
 
   const toggleFavorite = async (book: Book) => {
     const exists = favorites.find((b) => b.id === book.id);
+    
 
     if (exists) {
       const updated = favorites.filter((b) => b.id !== book.id);

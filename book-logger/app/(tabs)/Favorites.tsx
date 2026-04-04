@@ -4,7 +4,7 @@ import BookCard from "../../src/components/BookCard";
 import { StyleSheet } from "react-native";
 import { useState } from "react";
 import { Book } from "../../src/types/books";
-import {  ScrollView, TouchableOpacity } from "react-native";
+import { ScrollView, TouchableOpacity } from "react-native";
 import BookModal from "../BookModal";
 
 export default function FavoritesScreen() {
@@ -20,22 +20,6 @@ export default function FavoritesScreen() {
   }
 
   return (
-    // <View style={styles.main}>
-    //   <FlatList
-    //     contentContainerStyle={{ padding: 16 }}
-    //     data={favorites}
-    //     keyExtractor={(item) => item.id}
-    //     style={styles.booksContainer}
-    //     renderItem={({ item }) => (
-    //       <BookCard
-    //         book={item}
-    //         isFavorite={isFavorite(item.id)}
-    //         onToggleFavorite={() => toggleFavorite(item)}
-    //       />
-    //     )}
-    //   />
-    // </View>
-
     <View style={styles.main}>
       <Text style={{ fontSize: 24, marginBottom: 16 }}>FAVS!</Text>
       <View style={styles.favsContainer}>
@@ -49,7 +33,10 @@ export default function FavoritesScreen() {
           />
         ))}
       </View>
-      <BookModal selectedBook={selectedBook} onClose={() => setSelectedBook(null)} />
+      <BookModal
+        selectedBook={selectedBook}
+        onClose={() => setSelectedBook(null)}
+      />
     </View>
   );
 }

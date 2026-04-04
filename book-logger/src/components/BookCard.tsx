@@ -5,12 +5,13 @@ import { TouchableOpacity } from "react-native";
 import { useFavorites } from "../hooks/useFavorites";
 import { useLibrary } from "../context/LibraryContext";
 import { getColorFromId } from "../hooks/useColor";
+import { JSX } from "react/jsx-runtime";
 
 type Props = {
   book: Book;
   isFavorite?: boolean;
   onToggleFavorite?: () => void;
-  onPress?: () => void; // ✅ add this
+  onPress?: () => void;
 };
 
 export default function BookCard({
@@ -27,10 +28,28 @@ export default function BookCard({
   const status = libraryBook?.status;
   const rating = libraryBook?.rating;
 
+  const renderStars = (rating: number) => {
+    const stars: JSX.Element[] = [];
+
+    for (let i = 1; i <= 5; i++) {
+      if (rating >= i) {
+        // Full star
+        stars.push(<Text key={i}>★</Text>);
+      } else if (rating >= i - 0.5) {
+        // Half star
+        stars.push(<Text key={i}>⯪</Text>); // or "½" if you prefer
+      } else {
+        // Empty star
+        stars.push(<Text key={i}>☆</Text>);
+      }
+    }
+
+    return <Text style={{ fontSize: 18, color: "#FFD700" }}>{stars}</Text>;
+  };
+
   return (
     <TouchableOpacity
       onPress={() => {
-        console.log("pressed");
         onPress?.();
       }}
       activeOpacity={0.8}
@@ -53,72 +72,50 @@ export default function BookCard({
         <View style={styles.placeholder} />
       )}
 
-      <Button
-        title="📖 Currently Reading"
-        onPress={() => setBookStatus(book, "reading")}
-      />
-      {status === "reading" && (
-        <TouchableOpacity onPress={() => markAsCompleted(book.id)}>
-          <Text>✅ Done</Text>
+     {status !== "reading" && (
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => setBookStatus(book, "reading")}
+        >
+          <Text>Reading?</Text>
         </TouchableOpacity>
       )}
-      {status === "completed" && !rating && (
-        <View style={{ flexDirection: "row", gap: 8 }}>
-          {[1, 2, 3, 4, 5].map((star) => (
-            <TouchableOpacity
-              key={star}
-              onPress={() => rateBook(book.id, star)}
-            >
-              <Text style={{ fontSize: 20 }}>⭐</Text>
-            </TouchableOpacity>
-          ))}
-        </View>
+      {status === "reading" && (
+        <TouchableOpacity
+          onPress={() => markAsCompleted(book.id)}
+          style={styles.button}
+        >
+          <Text>Finished?</Text>
+        </TouchableOpacity>
       )}
-      {rating && <Text>{"⭐".repeat(rating)}</Text>}
+      {status === "completed" && (
+        <>
+          {!rating ? (
+            <View style={{ flexDirection: "row", gap: 8 }}>
+              {[1, 2, 3, 4, 5].map((star) => (
+                <TouchableOpacity
+                  key={star}
+                  onPress={() => rateBook(book.id, star)}
+                >
+                  <Text style={{ fontSize: 20 }}>★</Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+          ) : (
+            <Text style={{ fontSize: 18 }}>{renderStars(rating)}</Text>
+          )}
+        </>
+      )}
     </TouchableOpacity>
   );
-
-  {
-    /* <View style={styles.content}> */
-  }
-  {
-    /* <View style={styles.headerRow}>
-          <Text style={styles.title} numberOfLines={2}>
-            {book.title}
-          </Text> */
-  }
-
-  {
-    /* </View> */
-  }
-
-  {
-    /* <Text style={styles.author} numberOfLines={1}>
-          {book.authors?.join(", ") || "Unknown author"}
-        </Text>
-
-        {book.description && (
-          <Text style={styles.description}>
-            {book.description}
-          </Text>
-        )} */
-  }
-  {
-    /* </View> */
-  }
-  //   </View>
-  // </TouchableOpacity>
-  //   );
 }
 const styles = StyleSheet.create({
   card: {
     flexDirection: "column",
     marginBottom: 16,
-    backgroundColor: "#fff",
     borderRadius: 12,
     padding: 12,
     display: "flex",
-    // alignItems: "flex-end",
     gap: 12,
     // flex: 1,
 
@@ -164,5 +161,11 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     // alignItems: "flex-start",
+  },
+  button: {
+    // marginBottom: 12,
+    backgroundColor: "rgba(255,255,255,0.8)",
+    padding: 8,
+    borderRadius: 8,
   },
 });

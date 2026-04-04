@@ -3,6 +3,7 @@ import { useLibrary } from "../../src/context/LibraryContext";
 import BookCard from "../../src/components/BookCard";
 import { useState } from "react";
 import { Book } from "../../src/types/books";
+import BookModal from "../BookModal";
 
 export default function HomeScreen() {
   const { rateBook } = useLibrary();
@@ -11,14 +12,7 @@ export default function HomeScreen() {
   const currentlyReading = books.filter((b) => b.status === "reading");
   const others = books.filter((b) => b.status !== "reading");
   const completed = books.filter((b) => b.status === "completed");
-
-  if (books.length === 0) {
-    return (
-      <View style={{ padding: 20 }}>
-        <Text>No books yet 📚</Text>
-      </View>
-    );
-  }
+  const [selectedBook, setSelectedBook] = useState<Book | null>(null);
 
   return (
     <View style={{ flex: 1, padding: 16 }}>
@@ -36,6 +30,11 @@ export default function HomeScreen() {
             renderItem={({ item }) => <BookCard book={item.book} />}
             showsHorizontalScrollIndicator={false}
             style={{ marginBottom: 24 }}
+            contentContainerStyle={{ gap: 16 }}
+          />
+          <BookModal
+            selectedBook={selectedBook}
+            onClose={() => setSelectedBook(null)}
           />
         </>
       )}
@@ -47,8 +46,13 @@ export default function HomeScreen() {
 
       <FlatList
         data={others}
+        horizontal
         keyExtractor={(item) => item.book.id}
         renderItem={({ item }) => <BookCard book={item.book} />}
+      />
+      <BookModal
+        selectedBook={selectedBook}
+        onClose={() => setSelectedBook(null)}
       />
     </View>
   );
